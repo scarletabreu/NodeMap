@@ -114,6 +114,94 @@ public class WorldMap {
         }
     }
 
+    public void FloydWarshall() {
+        int n = stops.size();
+        int[][] dist = new int[n][n];
+        int[][] next = new int[n][n];
+
+        // Inicializar matrices de distancia y siguiente
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j) {
+                    dist[i][j] = 0;
+                    next[i][j] = i;
+                } else {
+                    Route route = stops.get(i).getRoute(stops.get(j));
+                    if (route != null && route.getDistance() != -1) {
+                        dist[i][j] = route.getDistance();
+                        next[i][j] = j;
+                    } else {
+                        dist[i][j] = Integer.MAX_VALUE;
+                        next[i][j] = -1;
+                    }
+                }
+            }
+        }
+
+        // Algoritmo de Floyd-Warshall
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dist[i][k] < Integer.MAX_VALUE && dist[k][j] < Integer.MAX_VALUE) {
+                        if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                            dist[i][j] = dist[i][k] + dist[k][j];
+                            next[i][j] = next[i][k];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Imprimir resultados de distancias más cortas y caminos
+        System.out.println("Distancias más cortas entre todas las paradas:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][j] == Integer.MAX_VALUE) {
+                    System.out.printf("No hay camino de %d a %d%n", stops.get(i).getId(), stops.get(j).getId());
+                } else {
+                    System.out.printf("Distancia más corta de %d a %d: %d%n", stops.get(i).getId(), stops.get(j).getId(), dist[i][j]);
+                    System.out.print("Ruta: ");
+                    printPath(i, j, next);
+                    System.out.println();
+                }
+            }
+        }
+    }
+
+    // Método auxiliar para imprimir la ruta de i a j
+    private void printPath(int i, int j, int[][] next) {
+        if (next[i][j] == -1) {
+            System.out.print("No existe una ruta");
+            return;
+        }
+        List<Integer> path = new ArrayList<>();
+        while (i != j) {
+            path.add(stops.get(i).getId());
+            i = next[i][j];
+        }
+        path.add(stops.get(j).getId());
+        for (int id : path) {
+            System.out.print(id + " ");
+        }
+    }
+
+
+    private List<Stop> reconstructPath(Stop start, Stop end, int[][] next) {
+        int startIndex = stops.indexOf(start);
+        int endIndex = stops.indexOf(end);
+
+        if (next[startIndex][endIndex] == -1) return Collections.emptyList();
+
+        List<Stop> path = new ArrayList<>();
+        for (int at = startIndex; at != endIndex; at = next[at][endIndex]) {
+            path.add(stops.get(at));
+            if (at == -1) return Collections.emptyList(); // Verifica si hay una ruta válida
+        }
+        path.add(stops.get(endIndex));
+        return path;
+    }
+
+
     public List<Stop> getAllStops() {
         return stops; // Retorna la lista de todas las paradas
     }
