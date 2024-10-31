@@ -29,5 +29,9 @@ public class Main {
         // Llamar al método BellmanFord desde la parada inicial
         System.out.println("Ejecutando Bellman-Ford desde la parada 1:");
         worldMap.BellmanFord(stop1);
+
+        // Ejecutar Floyd-Warshall en todo el mapa
+        System.out.println("Ejecutando Floyd-Warshall en el mapa completo:");
+        worldMap.FloydWarshall();
     }
 }
