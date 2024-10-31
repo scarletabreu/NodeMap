@@ -42,7 +42,7 @@ public class Route {
         return distance;
     }
 
-    public float getCost(){
+    public int getCost(){
         return cost;
     }
 
