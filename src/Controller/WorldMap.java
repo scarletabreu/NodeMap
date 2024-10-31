@@ -80,18 +80,59 @@ public class WorldMap {
         }
     }
 
+    public void BellmanFord(Stop start) {
+        HashMap<Stop, Integer> distances = new HashMap<>();
+        HashMap<Stop, List<Stop>> paths = new HashMap<>();
+
+        // Inicializar distancias
+        for (Stop stop : getAllStops()) {
+            distances.put(stop, Integer.MAX_VALUE);
+            paths.put(stop, new ArrayList<>());
+        }
+        distances.put(start, 0);
+        paths.get(start).add(start);
+
+        // Relajación de las aristas
+        for (int i = 1; i < getAllStops().size(); i++) {
+            for (Stop stop : getAllStops()) {
+                for (Stop neighbor : stop.getAdjacencyList()) {
+                    int newDist = distances.get(stop) + stop.getRouteAttributes().get(neighbor)[0]; // Usando distancia
+                    if (newDist < distances.get(neighbor)) {
+                        distances.put(neighbor, newDist);
+                        List<Stop> newPath = new ArrayList<>(paths.get(stop));
+                        newPath.add(neighbor);
+                        paths.put(neighbor, newPath);
+                    }
+                }
+            }
+        }
+
+        // Imprimir resultados
+        for (Stop stop : getAllStops()) {
+            System.out.println("Distancia más corta de " + start.getId() + " a " + stop.getId() + ": " + distances.get(stop));
+            System.out.println("Ruta: " + paths.get(stop).stream().map(Stop::getId).toList());
+        }
+    }
+
+    public List<Stop> getAllStops() {
+        return stops; // Retorna la lista de todas las paradas
+    }
+
+
     private List<Integer> routeList(Stop start, Stop end, Map<Stop, Stop> predecessors) {
         List<Integer> path = new ArrayList<>();
         for (Stop at = end; at != null; at = predecessors.get(at)) {
             path.add(at.getId());
         }
         Collections.reverse(path);
-        if (path.getFirst().equals(start.getId())) {
+        // Cambiar la verificación a:
+        if (!path.isEmpty() && path.getFirst().equals(start.getId())) {
             return path; // Retornar la ruta si es válida
         } else {
             return Collections.emptyList(); // Retornar lista vacía si no hay ruta
         }
     }
+
 
     private int calculatePriority(int currentDistance, Route route, Priority priority) {
         int result = 0;

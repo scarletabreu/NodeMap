@@ -6,20 +6,31 @@ import java.util.List;
 import Controller.WorldMap;
 
 public class Stop {
-    private final List <Stop> adjacencyList;
+    private static int counter = 0;
+    private final int id;
+    private final List<Stop> adjacencyList;
     private HashMap<Stop, Integer[]> routeAttributes = new HashMap<>();
-    private final int id = WorldMap.getInstance().getStops().size() + 1;
 
     public Stop(List<Stop> vertices, int[] distance, int[] time, int[] price, int[] transports) {
+        this.id = ++counter;
         System.out.println("Created STOP: " + id);
+
         adjacencyList = new ArrayList<>();
-        for(int ind = 0; ind < distance.length; ind++){
+        for(int ind = 0; ind < distance.length; ind++) {
             System.out.println("Added STOP: " + vertices.get(ind).id + " to STOP: " + id);
             adjacencyList.add(vertices.get(ind));
             routeAttributes.put(vertices.get(ind), new Integer[]{distance[ind], time[ind], price[ind], transports[ind]});
+
             WorldMap.getInstance().findStopById(vertices.get(ind).id).addVertex(this, distance[ind], time[ind], price[ind], transports[ind]);
             WorldMap.getInstance().findStopById(vertices.get(ind).id).getRouteAttributes().put(this, new Integer[]{distance[ind], time[ind], price[ind], transports[ind]});
         }
+    }
+
+    public Stop() {
+        this.id = ++counter; // Asigna un ID único incrementado
+        System.out.println("Created STOP: " + id);
+        this.adjacencyList = new ArrayList<>();
+        this.routeAttributes = new HashMap<>();
     }
 
     public HashMap<Stop, Integer[]> getRouteAttributes() {
@@ -30,22 +41,19 @@ public class Stop {
         return id;
     }
 
-    public Stop(){
-        System.out.println("Created STOP: " + id);
-        adjacencyList = new ArrayList<>();
-        routeAttributes.put(this, new Integer[]{0, 0, 0, 0});
-    }
-
     public List<Stop> getAdjacencyList() {
         return adjacencyList;
     }
 
     public void addVertex(Stop vertex, int distance, int time, int price, int transports) {
-        adjacencyList.add(vertex);
-        routeAttributes.put(vertex, new Integer[]{distance, time, price, transports});
+        if (!adjacencyList.contains(vertex)) {
+            adjacencyList.add(vertex);
+            routeAttributes.put(vertex, new Integer[]{distance, time, price, transports});
+            System.out.println("Added connection from Stop " + id + " to Stop " + vertex.id);
+        }
     }
 
-    public void removeVertex(Stop vertex) {
+        public void removeVertex(Stop vertex) {
         adjacencyList.remove(vertex);
         routeAttributes.remove(vertex);
     }
