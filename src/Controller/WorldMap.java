@@ -96,7 +96,7 @@ public class WorldMap {
         for (int i = 1; i < getAllStops().size(); i++) {
             for (Stop stop : getAllStops()) {
                 for (Stop neighbor : stop.getAdjacencyList()) {
-                    int newDist = distances.get(stop) + stop.getRouteAttributes().get(neighbor)[0]; // Usando distancia
+                    int newDist = distances.get(stop) + stop.getRouteAttributes().get(neighbor)[0];
                     if (newDist < distances.get(neighbor)) {
                         distances.put(neighbor, newDist);
                         List<Stop> newPath = new ArrayList<>(paths.get(stop));
@@ -184,6 +184,57 @@ public class WorldMap {
             System.out.print(id + " ");
         }
     }
+
+    public void Prim() {
+        // Inicializar el conjunto de vértices y aristas
+        Set<Stop> vertices = new HashSet<>(stops);
+        Set<Route> mstEdges = new HashSet<>();
+
+        // Inicializar el conjunto de vértices del árbol de expansión mínima
+        Set<Stop> mstVertices = new HashSet<>();
+        Stop start = stops.get(0);
+        mstVertices.add(start);
+        vertices.remove(start);
+
+        while (!vertices.isEmpty()) {
+            Route minEdge = null;
+            Stop minVertex = null;
+            int minCost = Integer.MAX_VALUE;
+
+            // Iterar sobre todos los vértices en el árbol
+            for (Stop vertex : mstVertices) {
+                for (Stop neighbor : vertex.getAdjacencyList()) {
+                    Route edge = vertex.getRoute(neighbor);
+                    if (edge != null && vertices.contains(neighbor) && edge.getCost() < minCost) {
+                        minCost = edge.getCost();
+                        minEdge = edge;
+                        minVertex = neighbor;
+                    }
+                }
+            }
+
+            // Verificar si se encontró una arista mínima
+            if (minEdge != null) {
+                mstVertices.add(minVertex);
+                vertices.remove(minVertex);
+                mstEdges.add(minEdge); // Aquí se agrega la arista mínima encontrada
+
+                // Impresión de la arista que se está agregando
+                System.out.println("Agregando arista: " + minEdge.getStart().getId() + " -> " + minEdge.getEnd().getId() + " Costo: " + minCost);
+            } else {
+                System.out.println("No hay más aristas para agregar al árbol de expansión mínima.");
+                break;
+            }
+        }
+
+        // Imprimir el árbol de expansión mínima
+        System.out.println("Árbol de expansión mínima:");
+        for (Route edge : mstEdges) {
+            System.out.println(edge.getStart().getId() + " -> " + edge.getEnd().getId() + " Costo: " + edge.getCost());
+        }
+    }
+
+
 
 
     private List<Stop> reconstructPath(Stop start, Stop end, int[][] next) {
