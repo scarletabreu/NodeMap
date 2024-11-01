@@ -1,9 +1,7 @@
 package Controller;
 import Classes.*;
-
 import java.util.*;
 import Enum.Priority;
-
 
 public class WorldMap {
     private ArrayList<Stop> stops;
@@ -38,6 +36,8 @@ public class WorldMap {
         // Inicializar distancias y predecesores
         Map<Stop, Integer> distances = new HashMap<>();
         Map<Stop, Stop> predecessors = new HashMap<>();
+        Set<Stop> visited = new HashSet<>();
+
         for (Stop stop : stops) {
             distances.put(stop, Integer.MAX_VALUE);
         }
@@ -54,6 +54,11 @@ public class WorldMap {
                 break;
             }
 
+            if (visited.contains(current)) {
+                continue; // Evitar procesamiento de nodos visitados
+            }
+            visited.add(current);
+
             for (Stop neighbor : current.getAdjacencyList()) {
                 Route route = current.getRoute(neighbor);
                 if (route == null || route.getTime() == -1) {
@@ -61,13 +66,13 @@ public class WorldMap {
                     continue;
                 }
 
-                int newDist = calculatePriority(distances.get(current), route, priority);
+                int currentDist = distances.get(current);
+                int newDist = calculatePriority(currentDist, route, priority);
 
                 if (newDist < distances.get(neighbor)) {
-                    queue.remove(neighbor);
                     distances.put(neighbor, newDist);
                     predecessors.put(neighbor, current); // Guardar el predecesor
-                    queue.add(neighbor);
+                    queue.add(neighbor); // Añadir vecino a la cola para futuras evaluaciones
                 }
             }
         }
@@ -81,12 +86,14 @@ public class WorldMap {
         }
     }
 
+
     public void BellmanFord(Stop start) {
         HashMap<Stop, Integer> distances = new HashMap<>();
         HashMap<Stop, List<Stop>> paths = new HashMap<>();
+        List<Stop> allStops = getAllStops();  // Evitar múltiples llamadas
 
-        // Inicializar distancias
-        for (Stop stop : getAllStops()) {
+        // Inicializar distancias y rutas
+        for (Stop stop : allStops) {
             distances.put(stop, Integer.MAX_VALUE);
             paths.put(stop, new ArrayList<>());
         }
@@ -94,45 +101,55 @@ public class WorldMap {
         paths.get(start).add(start);
 
         // Relajación de las aristas
-        for (int i = 1; i < getAllStops().size(); i++) {
-            for (Stop stop : getAllStops()) {
+        for (int i = 1; i < allStops.size(); i++) {
+            boolean updated = false;  // Para detectar si hubo cambios
+            for (Stop stop : allStops) {
+                int currentDistance = distances.get(stop);
                 for (Stop neighbor : stop.getAdjacencyList()) {
-                    int newDist = distances.get(stop) + stop.getRouteAttributes().get(neighbor)[0];
+                    int newDist = currentDistance + stop.getRouteAttributes().get(neighbor)[0];
                     if (newDist < distances.get(neighbor)) {
                         distances.put(neighbor, newDist);
-                        List<Stop> newPath = new ArrayList<>(paths.get(stop));
-                        newPath.add(neighbor);
-                        paths.put(neighbor, newPath);
+                        paths.get(neighbor).clear();  // Limpiar la ruta anterior
+                        paths.get(neighbor).addAll(paths.get(stop));  // Agregar la ruta más corta
+                        paths.get(neighbor).add(neighbor);  // Agregar el vecino
+                        updated = true;  // Se realizó una actualización
                     }
                 }
+            }
+            if (!updated) {
+                break;  // Si no hubo actualizaciones, salir del bucle
             }
         }
 
         // Imprimir resultados
-        for (Stop stop : getAllStops()) {
+        for (Stop stop : allStops) {
             System.out.println("Distancia más corta de " + start.getId() + " a " + stop.getId() + ": " + distances.get(stop));
             System.out.println("Ruta: " + paths.get(stop).stream().map(Stop::getId).toList());
         }
     }
 
+
     public void FloydWarshall() {
         int n = stops.size();
         int[][] dist = new int[n][n];
         int[][] next = new int[n][n];
+        final int NO_PATH = Integer.MAX_VALUE;
 
         // Inicializar matrices de distancia y siguiente
         for (int i = 0; i < n; i++) {
+            Stop stopI = stops.get(i);
             for (int j = 0; j < n; j++) {
+                Stop stopJ = stops.get(j);
                 if (i == j) {
                     dist[i][j] = 0;
                     next[i][j] = i;
                 } else {
-                    Route route = stops.get(i).getRoute(stops.get(j));
+                    Route route = stopI.getRoute(stopJ);
                     if (route != null && route.getDistance() != -1) {
                         dist[i][j] = route.getDistance();
                         next[i][j] = j;
                     } else {
-                        dist[i][j] = Integer.MAX_VALUE;
+                        dist[i][j] = NO_PATH;
                         next[i][j] = -1;
                     }
                 }
@@ -142,9 +159,9 @@ public class WorldMap {
         // Algoritmo de Floyd-Warshall
         for (int k = 0; k < n; k++) {
             for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (dist[i][k] < Integer.MAX_VALUE && dist[k][j] < Integer.MAX_VALUE) {
-                        if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                if (dist[i][k] < NO_PATH) { // Solo evaluar si hay un camino a través de k
+                    for (int j = 0; j < n; j++) {
+                        if (dist[k][j] < NO_PATH && dist[i][k] + dist[k][j] < dist[i][j]) {
                             dist[i][j] = dist[i][k] + dist[k][j];
                             next[i][j] = next[i][k];
                         }
@@ -157,7 +174,7 @@ public class WorldMap {
         System.out.println("Distancias más cortas entre todas las paradas:");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (dist[i][j] == Integer.MAX_VALUE) {
+                if (dist[i][j] == NO_PATH) {
                     System.out.printf("No hay camino de %d a %d%n", stops.get(i).getId(), stops.get(j).getId());
                 } else {
                     System.out.printf("Distancia más corta de %d a %d: %d%n", stops.get(i).getId(), stops.get(j).getId(), dist[i][j]);
@@ -168,6 +185,7 @@ public class WorldMap {
             }
         }
     }
+
 
     // Método auxiliar para imprimir la ruta de i a j
     private void printPath(int i, int j, int[][] next) {
@@ -187,45 +205,37 @@ public class WorldMap {
     }
 
     public void Prim() {
-        // Inicializar el conjunto de vértices y aristas
-        Set<Stop> vertices = new HashSet<>(stops);
         Set<Route> mstEdges = new HashSet<>();
-
-        // Inicializar el conjunto de vértices del árbol de expansión mínima
         Set<Stop> mstVertices = new HashSet<>();
+        PriorityQueue<Route> edgeQueue = new PriorityQueue<>(Comparator.comparingInt(Route::getCost));
+
+        // Seleccionar el primer vértice y agregar sus aristas a la cola de prioridad
         Stop start = stops.get(0);
         mstVertices.add(start);
-        vertices.remove(start);
+        edgeQueue.addAll(start.getRoutes());
 
-        while (!vertices.isEmpty()) {
-            Route minEdge = null;
-            Stop minVertex = null;
-            int minCost = Integer.MAX_VALUE;
+        while (mstVertices.size() < stops.size() && !edgeQueue.isEmpty()) {
+            Route minEdge = edgeQueue.poll();
+            Stop nextVertex = minEdge.getEnd();
 
-            // Iterar sobre todos los vértices en el árbol
-            for (Stop vertex : mstVertices) {
-                for (Stop neighbor : vertex.getAdjacencyList()) {
-                    Route edge = vertex.getRoute(neighbor);
-                    if (edge != null && vertices.contains(neighbor) && edge.getCost() < minCost) {
-                        minCost = edge.getCost();
-                        minEdge = edge;
-                        minVertex = neighbor;
-                    }
+            // Si el destino de la arista ya está en el árbol, omitir
+            if (mstVertices.contains(nextVertex)) {
+                continue;
+            }
+
+            // Agregar arista y vértice al árbol de expansión mínima
+            mstVertices.add(nextVertex);
+            mstEdges.add(minEdge);
+
+            // Agregar nuevas aristas a la cola de prioridad
+            for (Route edge : nextVertex.getRoutes()) {
+                if (!mstVertices.contains(edge.getEnd())) {
+                    edgeQueue.add(edge);
                 }
             }
 
-            // Verificar si se encontró una arista mínima
-            if (minEdge != null) {
-                mstVertices.add(minVertex);
-                vertices.remove(minVertex);
-                mstEdges.add(minEdge); // Aquí se agrega la arista mínima encontrada
-
-                // Impresión de la arista que se está agregando
-                System.out.println("Agregando arista: " + minEdge.getStart().getId() + " -> " + minEdge.getEnd().getId() + " Costo: " + minCost);
-            } else {
-                System.out.println("No hay más aristas para agregar al árbol de expansión mínima.");
-                break;
-            }
+            // Impresión de la arista añadida
+            System.out.println("Agregando arista: " + minEdge.getStart().getId() + " -> " + minEdge.getEnd().getId() + " Costo: " + minEdge.getCost());
         }
 
         // Imprimir el árbol de expansión mínima
@@ -234,6 +244,7 @@ public class WorldMap {
             System.out.println(edge.getStart().getId() + " -> " + edge.getEnd().getId() + " Costo: " + edge.getCost());
         }
     }
+
 
     public List<Route> Kruskal() {
         List<Route> result = new ArrayList<>(); // Para almacenar el resultado

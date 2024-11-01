@@ -13,11 +13,9 @@ public class Stop {
 
     public Stop(List<Stop> vertices, int[] distance, int[] time, int[] price, int[] transports) {
         this.id = ++counter;
-        System.out.println("Created STOP: " + id);
 
         adjacencyList = new ArrayList<>();
         for(int ind = 0; ind < distance.length; ind++) {
-            System.out.println("Added STOP: " + vertices.get(ind).id + " to STOP: " + id);
             adjacencyList.add(vertices.get(ind));
             routeAttributes.put(vertices.get(ind), new Integer[]{distance[ind], time[ind], price[ind], transports[ind]});
 
@@ -28,7 +26,6 @@ public class Stop {
 
     public Stop() {
         this.id = ++counter;
-        System.out.println("Created STOP: " + id);
         this.adjacencyList = new ArrayList<>();
         this.routeAttributes = new HashMap<>();
     }
@@ -49,7 +46,6 @@ public class Stop {
         if (!adjacencyList.contains(vertex)) {
             adjacencyList.add(vertex);
             routeAttributes.put(vertex, new Integer[]{distance, time, price, transports});
-            System.out.println("Added connection from Stop " + id + " to Stop " + vertex.id);
         }
     }
 

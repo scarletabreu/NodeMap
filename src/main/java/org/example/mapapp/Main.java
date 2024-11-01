@@ -3,7 +3,7 @@ package org.example.mapapp;
 import Classes.Route;
 import Classes.Stop;
 import Controller.WorldMap;
-
+import Enum.Priority;
 import java.util.List;
 
 public class Main {
@@ -79,6 +79,26 @@ public class Main {
         stop2.addVertex(stop4, 5, 2, 10, 1); // Ruta de stop2 a stop4
         stop3.addVertex(stop4, 8, 6, 15, 1); // Ruta de stop3 a stop4
 
+        System.out.println("Ejecutando Bellman-Ford desde la parada 1:");
+        worldMap.BellmanFord(stop1);
+
+        System.out.println("----------------------------------------");
+
+
+        System.out.println("Ejecutando Dijkstra desde la parada 1:");
+        worldMap.dijkstra(stop2, stop4, Priority.DISTANCE);
+
+        System.out.println("----------------------------------------");
+
+        System.out.println("Ejecutando Floyd-Warshall en el mapa completo:");
+        worldMap.FloydWarshall();
+
+        System.out.println("----------------------------------------");
+
+        System.out.println("Ejecutando Prim:");
+        worldMap.Prim();
+
+        System.out.println("----------------------------------------");
         // Ejecutar el algoritmo de Kruskal
         List<Route> minimumSpanningTree = worldMap.Kruskal();
 
