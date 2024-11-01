@@ -4,6 +4,7 @@ import Classes.*;
 import java.util.*;
 import Enum.Priority;
 
+
 public class WorldMap {
     private ArrayList<Stop> stops;
     private ArrayList<Route> routes;
@@ -234,8 +235,35 @@ public class WorldMap {
         }
     }
 
+    public List<Route> Kruskal() {
+        List<Route> result = new ArrayList<>(); // Para almacenar el resultado
+        List<Route> edges = new ArrayList<>(); // Para almacenar todas las rutas (aristas)
 
+        // Reunir todas las aristas
+        for (Stop stop : stops) {
+            for (Route route : stop.getRoutes()) {
+                edges.add(route);
+            }
+        }
 
+        // Ordenar las aristas por distancia (o costo)
+        Collections.sort(edges, Comparator.comparingInt(Route::getDistance));
+
+        UnionFind uf = new UnionFind(); // Crear un objeto UnionFind
+
+        for (Route edge : edges) {
+            int startId = edge.getStart().getId();
+            int endId = edge.getEnd().getId();
+
+            // Si no están conectados, añadir la ruta al resultado y unir los conjuntos
+            if (!uf.connected(startId, endId)) {
+                uf.union(startId, endId);
+                result.add(edge);
+            }
+        }
+
+        return result; // Devuelve las rutas del árbol de expansión mínima
+    }
 
     private List<Stop> reconstructPath(Stop start, Stop end, int[][] next) {
         int startIndex = stops.indexOf(start);
@@ -254,9 +282,8 @@ public class WorldMap {
 
 
     public List<Stop> getAllStops() {
-        return stops; // Retorna la lista de todas las paradas
+        return stops;
     }
-
 
     private List<Integer> routeList(Stop start, Stop end, Map<Stop, Stop> predecessors) {
         List<Integer> path = new ArrayList<>();
@@ -301,5 +328,9 @@ public class WorldMap {
             }
         }
         return null;
+    }
+
+    public void addStop(Stop stop1) {
+        stops.add(stop1);
     }
 }
