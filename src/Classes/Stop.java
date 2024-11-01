@@ -27,7 +27,7 @@ public class Stop {
     }
 
     public Stop() {
-        this.id = ++counter; // Asigna un ID único incrementado
+        this.id = ++counter;
         System.out.println("Created STOP: " + id);
         this.adjacencyList = new ArrayList<>();
         this.routeAttributes = new HashMap<>();
