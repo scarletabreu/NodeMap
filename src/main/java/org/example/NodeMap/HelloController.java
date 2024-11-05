@@ -1,4 +1,4 @@
-package org.example.mapapp;
+package org.example.NodeMap;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

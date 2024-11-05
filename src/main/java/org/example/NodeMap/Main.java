@@ -1,4 +1,4 @@
-package org.example.mapapp;
+package org.example.NodeMap;
 
 import Classes.Route;
 import Classes.Stop;

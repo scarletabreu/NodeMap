@@ -1,4 +1,4 @@
-package org.example.mapapp;
+package org.example.NodeMap;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

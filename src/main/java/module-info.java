@@ -10,7 +10,11 @@ module org.example.mapapp {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.mail;
+    requires java.sql;
 
-    opens org.example.mapapp to javafx.fxml;
-    exports org.example.mapapp;
+    opens org.example.NodeMap to javafx.fxml;
+    exports org.example.NodeMap;
+    exports Visual;
+    opens Visual to javafx.fxml;
 }
