@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -23,6 +24,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Login extends Application {
+
 
     private StackPane mainContainer;
 
@@ -52,9 +54,8 @@ public class Login extends Application {
 
         gradientBackground.setFill(new LinearGradient(
                 0, 0, 1, 1, true, CycleMethod.REPEAT,
-                new Stop(0, Color.web("#B2DFDB")),
-                new Stop(0.12, Color.TRANSPARENT),
-                new Stop(0.875, Color.web("#B2DFDB"))
+                new Stop(0, Color.web("#302836")),
+                new Stop(0.875, Color.web("#AA7CFB"))
         ));
 
         mainContainer.getChildren().add(0, gradientBackground); // Añadir al fondo
@@ -66,16 +67,16 @@ public class Login extends Application {
         container.setAlignment(Pos.CENTER);
         container.setPadding(new Insets(40));
         container.setStyle(
-                "-fx-background-color: rgba(255, 255, 255, 0.9);" +
+                "-fx-background-color: rgba(48, 40, 54, 0.9);" +
                         "-fx-background-radius: 20;" +
                         "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);" +
                         "-fx-border-radius: 20;" +
-                        "-fx-border-color: rgba(255, 255, 255, 0.5);" +
+                        "-fx-border-color: rgba(48, 40, 54, 0.5);" +
                         "-fx-border-width: 2;"
         );
 
         // Logo section
-        Image logo = new Image("file:///C:/Users/Scarlet/Downloads/TheMap.png");
+        Image logo = new Image("file:///C:/Users/Scarlet/Downloads/A - DT/MapApp/src/main/java/Photos/TheMap.png");
         ImageView logoView = new ImageView(logo);
         logoView.setFitWidth(150);
         logoView.setFitHeight(150);
@@ -88,11 +89,12 @@ public class Login extends Application {
 
         Label titleLabel = new Label("NodeMap");
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40)); //Cambiar a Spicy Rice
-        titleLabel.setStyle("-fx-text-fill: #2A2A2A;");
+        titleLabel.setStyle("-fx-text-fill: #FFFFFF;");
 
         TextField usernameField = createField("Username");
         StackPane passwordField = createPasswordField("Password");
         CheckBox rememberMe = new CheckBox("Remember me");
+        rememberMe.setStyle("-fx-text-fill: #FFFFFF;");
         Hyperlink forgotPassword = new Hyperlink("Forgot password?");
         forgotPassword.setOnAction(e -> System.out.println("Forgot password clicked"));
 
@@ -101,6 +103,7 @@ public class Login extends Application {
         rememberForgotContainer.getChildren().addAll(rememberMe, forgotPassword);
 
         Label questionLabel = new Label("Don't have an account?");
+        questionLabel.setTextFill(Color.WHITE);
         Hyperlink signUpLink = new Hyperlink("Sign up");
         signUpLink.setOnAction(e -> showSignUpForm(screenBounds));
 
@@ -113,12 +116,12 @@ public class Login extends Application {
         loginButton.setPrefHeight(50);
         loginButton.setPrefWidth(300);
         loginButton.setStyle(
-                "-fx-background-color: #4CAF50;" +
+                "-fx-background-color: #AA7CFB;" +
                         "-fx-text-fill: white;" +
                         "-fx-background-radius: 25;" +
                         "-fx-cursor: hand;" +
                         "-fx-font-size: 16px;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(76,175,80,0.3), 10, 0, 0, 4);"
+                        "-fx-effect: dropshadow(gaussian, rgba(140,82,242,0.3), 10, 0, 0, 4);"
         );
 
         // Agrega los elementos al contenedor principal
@@ -135,20 +138,21 @@ public class Login extends Application {
         signUpContainer.setAlignment(Pos.CENTER);
         signUpContainer.setPadding(new Insets(40));
         signUpContainer.setStyle(
-                "-fx-background-color: rgba(255, 255, 255, 0.9);" +
+                "-fx-background-color: rgba(48, 40, 54, 0.9);" +
                         "-fx-background-radius: 20;" +
                         "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);" +
                         "-fx-border-radius: 20;" +
-                        "-fx-border-color: rgba(255, 255, 255, 0.5);" +
+                        "-fx-border-color: rgba(48, 40, 54, 0.5);" +
                         "-fx-border-width: 2;"
         );
 
         // Logo section
-        Image logo = new Image("file:///C:/Users/Scarlet/Downloads/TheMap.png");
+        Image logo = new Image("file:///C:/Users/Scarlet/Downloads/A - DT/MapApp/src/main/java/Photos/TheMap.png");
         ImageView logoView = new ImageView(logo);
         logoView.setFitWidth(150);
         logoView.setFitHeight(150);
         logoView.setPreserveRatio(true);
+
 
         VBox logoContainer = new VBox(10);
         logoContainer.setAlignment(Pos.CENTER);
@@ -158,7 +162,7 @@ public class Login extends Application {
         // Título
         Label titleLabel = new Label("NodeMap");
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
-        titleLabel.setStyle("-fx-text-fill: #2A2A2A;");
+        titleLabel.setStyle("-fx-text-fill: #FFFFFF;");
 
         // Campos del formulario de registro
         TextField emailField = createField("Email");
@@ -167,6 +171,7 @@ public class Login extends Application {
         Button signUpButton = new Button("Sign Up");
 
         Label questionLabel = new Label("Have an account?");
+        questionLabel.setTextFill(Color.WHITE);
         Hyperlink loginLink = new Hyperlink("Login");
         loginLink.setOnAction(e -> showLoginForm(screenBounds));
 
@@ -178,11 +183,12 @@ public class Login extends Application {
         signUpButton.setPrefHeight(50);
         signUpButton.setPrefWidth(300);
         signUpButton.setStyle(
-                "-fx-background-color: #4CAF50;" +
+                "-fx-background-color: #AA7CFB;" +
                         "-fx-text-fill: white;" +
                         "-fx-background-radius: 25;" +
                         "-fx-cursor: hand;" +
-                        "-fx-font-size: 16px;"
+                        "-fx-font-size: 16px;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(140,82,242,0.3), 10, 0, 0, 4);"
         );
 
         signUpButton.setOnAction(e -> {
@@ -287,8 +293,8 @@ public class Login extends Application {
         return container;
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }
+
 }

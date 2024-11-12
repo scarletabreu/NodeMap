@@ -2,17 +2,16 @@ package org.example.NodeMap;
 
 import Visual.Login;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainProof extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Login loginView = new Login();
-        //Scene scene = new Scene(loginView.getView(), 400, 200); // Tamaño de la ventana
-
-        primaryStage.setTitle("GPS - Inicio de Sesión");
-       // primaryStage.setScene(scene);
+        Login login = new Login();
+       // Scene scene = new Scene(login.getView(), 800, 600);
+        //primaryStage.setScene(scene);
         primaryStage.show();
     }
 
