@@ -7,6 +7,7 @@ public class WorldMap {
     private ArrayList<Stop> stops;
     private ArrayList<Route> routes;
     private static WorldMap instance;
+    private List<Stop> lastCalculatedPath;
 
     public WorldMap(ArrayList<Stop> stops, ArrayList<Route> routes) {
         this.stops = stops;
@@ -84,10 +85,12 @@ public class WorldMap {
             System.out.println("Distancia más corta de " + start.getId() + " a " + end.getId() + " usando " + priority.name() + ": " + distances.get(end));
             System.out.println("Ruta: " + routeList(start, end, predecessors));
         }
+
+        lastCalculatedPath = reconstructPath(predecessors, start, end);
     }
 
 
-    public void BellmanFord(Stop start) {
+    public void BellmanFord(Stop start, Priority priority) {
         HashMap<Stop, Integer> distances = new HashMap<>();
         HashMap<Stop, List<Stop>> paths = new HashMap<>();
         List<Stop> allStops = getAllStops();  // Evitar múltiples llamadas
@@ -106,7 +109,7 @@ public class WorldMap {
             for (Stop stop : allStops) {
                 int currentDistance = distances.get(stop);
                 for (Stop neighbor : stop.getAdjacencyList()) {
-                    int newDist = currentDistance + stop.getRouteAttributes().get(neighbor)[0];
+                    int newDist = calculatePriority(currentDistance, stop.getRoute(neighbor), priority);
                     if (newDist < distances.get(neighbor)) {
                         distances.put(neighbor, newDist);
                         paths.get(neighbor).clear();  // Limpiar la ruta anterior
@@ -129,9 +132,9 @@ public class WorldMap {
     }
 
 
-    public void FloydWarshall() {
+    public void FloydWarshall(Stop start, Stop end, Priority priority) {
         int n = stops.size();
-        int[][] dist = new int[n][n];
+        double [][] dist = new double[n][n];
         int[][] next = new int[n][n];
         final int NO_PATH = Integer.MAX_VALUE;
 
@@ -144,9 +147,9 @@ public class WorldMap {
                     dist[i][j] = 0;
                     next[i][j] = i;
                 } else {
-                    Route route = stopI.getRoute(stopJ);
-                    if (route != null && route.getDistance() != -1) {
-                        dist[i][j] = route.getDistance();
+                    double weight = calculatePriority(0, stopI.getRoute(stopJ), priority);
+                    if (weight != -1) {
+                        dist[i][j] = weight;
                         next[i][j] = j;
                     } else {
                         dist[i][j] = NO_PATH;
@@ -170,21 +173,42 @@ public class WorldMap {
             }
         }
 
-        // Imprimir resultados de distancias más cortas y caminos
-        System.out.println("Distancias más cortas entre todas las paradas:");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (dist[i][j] == NO_PATH) {
-                    System.out.printf("No hay camino de %d a %d%n", stops.get(i).getId(), stops.get(j).getId());
-                } else {
-                    System.out.printf("Distancia más corta de %d a %d: %d%n", stops.get(i).getId(), stops.get(j).getId(), dist[i][j]);
-                    System.out.print("Ruta: ");
-                    printPath(i, j, next);
-                    System.out.println();
+        if(start == null || end == null) {
+            // Imprimir resultados de distancias más cortas y caminos
+            System.out.println("Distancias más cortas entre todas las paradas:");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dist[i][j] == NO_PATH) {
+                        System.out.printf("No hay camino de %d a %d%n", stops.get(i).getId(), stops.get(j).getId());
+                    } else {
+                        System.out.printf("Distancia más corta de %d a %d: %d%n", stops.get(i).getId(), stops.get(j).getId(), dist[i][j]);
+                        System.out.print("Ruta: ");
+                        printPath(i, j, next);
+                        System.out.println();
+                    }
                 }
             }
         }
+        else{
+            int startIndex = stops.indexOf(start);
+            int endIndex = stops.indexOf(end);
+
+            // If no path exists between start and end, return
+            if (dist[startIndex][endIndex] == NO_PATH) {
+                System.out.println("No path exists from " + start.getId() + " to " + end.getId());
+                return;
+            }
+
+            // Print the shortest distance
+            System.out.println("The shortest distance from stop " + start.getId() + " to stop " + end.getId() + " is: " + dist[startIndex][endIndex]);
+
+            // Print the path
+            System.out.print("Path: ");
+            printPath(startIndex, endIndex, next);
+            System.out.println();
+        }
     }
+
 
 
     // Método auxiliar para imprimir la ruta de i a j
@@ -276,19 +300,27 @@ public class WorldMap {
         return result; // Devuelve las rutas del árbol de expansión mínima
     }
 
-    private List<Stop> reconstructPath(Stop start, Stop end, int[][] next) {
-        int startIndex = stops.indexOf(start);
-        int endIndex = stops.indexOf(end);
-
-        if (next[startIndex][endIndex] == -1) return Collections.emptyList();
-
+    private List<Stop> reconstructPath(Map<Stop, Stop> predecessors, Stop start, Stop end) {
         List<Stop> path = new ArrayList<>();
-        for (int at = startIndex; at != endIndex; at = next[at][endIndex]) {
-            path.add(stops.get(at));
-            if (at == -1) return Collections.emptyList(); // Verifica si hay una ruta válida
+        Stop current = end;
+
+        while (current != null) {
+            path.add(current);
+            current = predecessors.get(current);
         }
-        path.add(stops.get(endIndex));
-        return path;
+
+        Collections.reverse(path);
+
+        // Verify that the path starts with our start node
+        if (!path.isEmpty() && path.get(0).equals(start)) {
+            return path;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Stop> getLastCalculatedPath() {
+        return lastCalculatedPath;
     }
 
 
