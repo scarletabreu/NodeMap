@@ -58,7 +58,7 @@ public class Main {
 
 
         // Crear una instancia de WorldMap
-        WorldMap worldMap = WorldMap.getInstance();
+        /*WorldMap worldMap = WorldMap.getInstance();
 
         // Crear algunos Stops
         Stop stop1 = new Stop();
@@ -111,5 +111,5 @@ public class Main {
                     " | Tiempo: " + route.getTime());
         }
 
-    }
+    */}
 }

@@ -66,6 +66,8 @@ public class Stop {
     public void addVertex(Stop vertex, int distance, int time, int price, int transports) {
         if (!adjacencyList.contains(vertex)) {
             adjacencyList.add(vertex);
+            vertex.getAdjacencyList().add(this);
+            vertex.getRouteAttributes().put(this, new Integer[]{distance, time, price, transports});
             routeAttributes.put(vertex, new Integer[]{distance, time, price, transports});
         }
     }
@@ -102,4 +104,7 @@ public class Stop {
         return routes;
     }
 
+    public HashMap<Stop, Integer[]> getRouteAttributes() {
+        return routeAttributes;
+    }
 }
