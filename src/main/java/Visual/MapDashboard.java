@@ -7,6 +7,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -16,6 +17,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.input.MouseEvent;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.collections.FXCollections;
 import javafx.util.StringConverter;
@@ -35,7 +37,7 @@ public class MapDashboard {
     @FXML private Button findPathButton;
     @FXML private ComboBox<String> priorityComboBox = new ComboBox<>();
 
-    private Priority selectedPriority = Priority.DISTANCE;
+    private Priority selectedPriority;
     private Circle hoverCircle;
     private final HashMap<Stop, Circle> stopCircles;
     private boolean isAddingStop = false;
@@ -55,6 +57,28 @@ public class MapDashboard {
         worldMap = WorldMap.getInstance();
     }
 
+    public static void showMapDashboard(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MapDashboard.class.getResource("/org/example/NodeMap/MapDashboard.fxml"));
+            Pane root = loader.load();
+            Scene scene = new Scene(root);
+
+            // Get the screen dimensions
+            double screenWidth = primaryStage.getScene().getWindow().getWidth();
+            double screenHeight = primaryStage.getScene().getWindow().getHeight();
+
+            // Set the stage to fill the entire screen
+            primaryStage.setTitle("Map Dashboard");
+            primaryStage.setScene(scene);
+            primaryStage.setWidth(screenWidth);
+            primaryStage.setHeight(screenHeight);
+            primaryStage.getIcons().add(new javafx.scene.image.Image("file:/C:/Users/Scarlet/Downloads/A%20-%20DT/MapApp/src/main/java/Photos/TheMap.png"));
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void initialize() {
         hoverCircle = new Circle(10, Color.BLUE);
@@ -68,7 +92,141 @@ public class MapDashboard {
         routeListVBox.setPadding(new Insets(5));
         routeListVBox.setSpacing(5);
 
+        addStopButton.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        );
+
+        addStopButton.setOnMouseEntered(e -> addStopButton.setStyle(
+                "-fx-background-color: #AA7CFB; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #302836; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        ));
+
+        addStopButton.setOnMouseExited(e -> addStopButton.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        ));
+
+        findPathButton.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        );
+
+        findPathButton.setOnMouseEntered(e -> findPathButton.setStyle(
+                "-fx-background-color: #AA7CFB; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #302836; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        ));
+
+        findPathButton.setOnMouseExited(e -> findPathButton.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        ));
+
+        enrouteButton.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        );
+
+        enrouteButton.setOnMouseEntered(e -> enrouteButton.setStyle(
+                "-fx-background-color: #AA7CFB; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #302836; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        ));
+
+        enrouteButton.setOnMouseExited(e -> enrouteButton.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        ));
+
+        priorityComboBox.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        );
+
+        stopListVBox.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        );
+
+        routeListVBox.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        );
+
+        priorityComboBox.setStyle(
+                "-fx-background-color: #302836; " +
+                        "-fx-text-fill: #FEFEFE; " +
+                        "-fx-font-size: 14px; " +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #AA7CFB; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 10;"
+        );
         priorityComboBox.setItems(FXCollections.observableArrayList("DISTANCE", "TIME", "COST", "TRANSPORTS"));
+        mapPane.setPrefHeight(1000);
+        mapPane.setPrefWidth(1000);
+
+        mapPane.setStyle("-fx-background-color: #56525C; -fx-background-radius: 15;");
+
 
         // Set up the StringConverter to convert between strings and enum values
         priorityComboBox.setConverter(new StringConverter<String>() {
@@ -137,10 +295,8 @@ public class MapDashboard {
         clearHighlightedPath();
 
 
-        if (selectedPriority != null) {
-            // Call Dijkstra or any pathfinding logic with the selected priority
-            worldMap.dijkstra(start, end, selectedPriority);
-        }
+        // Call Dijkstra or any pathfinding logic with the selected priority
+        worldMap.dijkstra(start, end, selectedPriority);
 
         // Get the path from the WorldMap
         List<Stop> path = worldMap.getLastCalculatedPath();
@@ -179,7 +335,7 @@ public class MapDashboard {
     @FXML
     private void handleEnroute() {
         isRouting = !isRouting;
-        enrouteButton.setStyle(isRouting ? "-fx-background-color: #ff8080;" : "");
+        enrouteButton.setStyle(isRouting ? "-fx-background-color: #ef2121;" : "");
         selectedStartStop = null;
 
         // Update cursor for all stop circles

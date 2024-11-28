@@ -1,5 +1,6 @@
 package Visual;
 
+//import DataBase.FirebaseInitializer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +14,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/NodeMap/MapDashboard.fxml"));
 
-
+//        FirebaseInitializer.getInstance().getFirestore().collection("User").document().get();
         AnchorPane root = loader.load();
 
         // Create the Scene

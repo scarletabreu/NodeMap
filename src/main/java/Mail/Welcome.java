@@ -1,5 +1,5 @@
 package Mail;
-
+/*
 import java.io.File;
 import java.util.Properties;
 import javax.mail.*;
@@ -11,18 +11,19 @@ public class Welcome {
         final String appPassword = "byrr kvau xonj utyy"; // Reemplaza con tu contraseña de aplicación
 
         // Construir el cuerpo del correo en HTML
-        String body = String.format(
-                "<h1>¡Gracias por registrarte en NodeMap!</h1>" +
-                        "<p>Hola %s,</p>" +
-                        "<p>Estamos emocionados de que te unas a nuestra comunidad. NodeMap es un innovador sistema de gestión de transporte público fundado por Scarlet Abreu e Isaac Peña el 22 de octubre de 2024. " +
-                        "Nuestra misión es hacer que la experiencia de viajar en transporte público sea más eficiente y accesible para todos. " +
-                        "A través de nuestra plataforma, podrás planificar tus rutas, recibir actualizaciones en tiempo real sobre horarios y trayectos, y mucho más.</p>" +
-                        "<p>Este proyecto no hubiera sido posible sin la inspiración y el apoyo de nuestro profesor, Freddy Peña, quien nos impulsó a transformar nuestras ideas en esta útil herramienta.</p>" +
-                        "<p>Tu contraseña es: <strong>%s</strong></p>" +
-                        "<p>Te animamos a explorar todas las funcionalidades de NodeMap y a darnos tu feedback. ¡Bienvenido a bordo!</p>" +
-                        "<p>Atentamente,<br>El equipo de NodeMap</p>" +
-                        "<img src=\"cid:mapImage\">", userName, password
-        );
+        String body = """
+                <h1>¡Gracias por registrarte en NodeMap!</h1>" +
+                                        "<p>Hola %s,</p>" +
+                                        "<p>Estamos emocionados de que te unas a nuestra comunidad. NodeMap es un innovador sistema de gestión de transporte público fundado por Scarlet Abreu e Isaac Peña el 22 de octubre de 2024. " +
+                                        "Nuestra misión es hacer que la experiencia de viajar en transporte público sea más eficiente y accesible para todos. " +
+                                        "A través de nuestra plataforma, podrás planificar tus rutas, recibir actualizaciones en tiempo real sobre horarios y trayectos, y mucho más.</p>" +
+                                        "<p>Este proyecto no hubiera sido posible sin la inspiración y el apoyo de nuestro profesor, Freddy Peña, quien nos impulsó a transformar nuestras ideas en esta útil herramienta.</p>" +
+                                        "<p>Tu contraseña es: <strong>%s</strong></p>" +
+                                        "<p>Te animamos a explorar todas las funcionalidades de NodeMap y a darnos tu feedback. ¡Bienvenido a bordo!</p>" +
+                                        "<p>Atentamente,<br>El equipo de NodeMap</p>" +
+                                        "<img src=\\"cid:mapImage\\">"
+                """ .formatted(userName, password);
+
 
         // Configuración del servidor SMTP
         Properties props = new Properties();
@@ -50,7 +51,7 @@ public class Welcome {
 
             // Crea la parte de la imagen
             MimeBodyPart imagePart = new MimeBodyPart();
-            String filePath = "C:/Users/Scarlet/Downloads/TheMap.png"; // Ruta a tu imagen
+            String filePath = "C:/Users/Scarlet/Downloads/A - DT/MapApp/src/main/java/Photos/TheMap.png";
             imagePart.attachFile(new File(filePath));
             imagePart.setHeader("Content-ID", "<mapImage>");
 
@@ -70,4 +71,4 @@ public class Welcome {
             e.printStackTrace();
         }
     }
-}
+}*/

@@ -16,6 +16,17 @@ import javafx.geometry.Pos;
 
 public class MainDashboard extends Application {
     private Scene scene;
+
+    public static void showDashboard(Stage primaryStage) {
+        MainDashboard dashboard = new MainDashboard();
+        try {
+            primaryStage.getIcons().add(new javafx.scene.image.Image("file:/C:/Users/Scarlet/Downloads/A%20-%20DT/MapApp/src/main/java/Photos/TheMap.png"));
+            dashboard.start(primaryStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -130,6 +141,8 @@ public class MainDashboard extends Application {
         createMapBtn.setOnAction(e -> {
             // Acción cuando se hace clic en el botón
             System.out.println("Button clicked!");
+
+            MapDashboard.showMapDashboard(primaryStage);
         });
         topButtons.getChildren().addAll(openMapBtn, createMapBtn);
 

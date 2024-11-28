@@ -82,7 +82,11 @@ public class WorldMap {
         if (distances.get(end) == Integer.MAX_VALUE) {
             System.out.println("No existe una ruta desde " + start.getId() + " hasta " + end.getId());
         } else {
-            System.out.println("Distancia más corta de " + start.getId() + " a " + end.getId() + " usando " + priority.name() + ": " + distances.get(end));
+            if(priority == null){
+                System.out.println("Precio promedio más corto de " + start.getId() + " a " + end.getId() + ": " + distances.get(end));
+                System.out.println("Ruta: " + routeList(start, end, predecessors));
+            }
+            else System.out.println("Distancia más corta de " + start.getId() + " a " + end.getId() + " usando " + priority.name() + ": " + distances.get(end));
             System.out.println("Ruta: " + routeList(start, end, predecessors));
         }
 
@@ -345,6 +349,12 @@ public class WorldMap {
 
     private int calculatePriority(int currentDistance, Route route, Priority priority) {
         int result = 0;
+        if(route == null){
+            return -1;
+        }
+        if(priority == null){
+            return currentDistance + route.getTransports() + (int) route.getCost() + route.getTime() + route.getDistance();
+        }
         switch (priority) {
             case DISTANCE:
                 result = currentDistance + route.getDistance();
@@ -359,7 +369,7 @@ public class WorldMap {
                 result = currentDistance + route.getTransports();
                 break;
             default:
-                throw new IllegalArgumentException("Prioridad desconocida: " + priority.name());
+                result = currentDistance + route.getTransports() + (int) route.getCost() + route.getTime() + route.getDistance();
         }
         return result;
     }

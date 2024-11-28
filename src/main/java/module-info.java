@@ -10,8 +10,10 @@ module org.example.mapapp {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
-    requires java.mail;
     requires java.sql;
+    requires firebase.admin;
+    requires com.google.auth.oauth2;
+    requires google.cloud.firestore;
 
     opens org.example.NodeMap to javafx.fxml;
     exports org.example.NodeMap;
