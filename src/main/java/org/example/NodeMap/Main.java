@@ -80,7 +80,7 @@ public class Main {
         stop3.addVertex(stop4, 8, 6, 15, 1); // Ruta de stop3 a stop4
 
         System.out.println("Ejecutando Bellman-Ford desde la parada 1:");
-        worldMap.BellmanFord(stop1);
+        worldMap.BellmanFord(stop1, Priority.DISTANCE);
 
         System.out.println("----------------------------------------");
 
@@ -91,7 +91,7 @@ public class Main {
         System.out.println("----------------------------------------");
 
         System.out.println("Ejecutando Floyd-Warshall en el mapa completo:");
-        worldMap.FloydWarshall();
+        worldMap.FloydWarshall(stop1, stop2, Priority.DISTANCE);
 
         System.out.println("----------------------------------------");
 

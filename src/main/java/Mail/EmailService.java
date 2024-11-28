@@ -1,5 +1,5 @@
 package Mail;
-
+/*
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -49,4 +49,4 @@ public class EmailService {
 
         sendEmail(username, subject, body); // Envía el correo con el código de recuperación
     }
-}
+}*/

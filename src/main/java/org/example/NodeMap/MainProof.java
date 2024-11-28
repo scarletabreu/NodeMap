@@ -2,17 +2,15 @@ package org.example.NodeMap;
 
 import Visual.Login;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainProof extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.getIcons().add(new javafx.scene.image.Image("file:/C:/Users/Scarlet/Downloads/A%20-%20DT/MapApp/src/main/java/Photos/TheMap.png"));
         Login login = new Login();
-       // Scene scene = new Scene(login.getView(), 800, 600);
-        //primaryStage.setScene(scene);
-        primaryStage.show();
+        login.start(primaryStage);
     }
 
     public static void main(String[] args) {

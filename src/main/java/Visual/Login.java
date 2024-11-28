@@ -1,6 +1,6 @@
 package Visual;
 
-import Mail.Welcome;
+//import Mail.Welcome;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,13 +24,12 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Login extends Application {
-
-
     private StackPane mainContainer;
 
     @Override
     public void start(Stage primaryStage) {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        primaryStage.getIcons().add(new javafx.scene.image.Image("file:/C:/Users/Scarlet/Downloads/A%20-%20DT/MapApp/src/main/java/Photos/TheMap.png"));
 
         // Crea el contenedor principal y establece el fondo de gradiente
         mainContainer = new StackPane();
@@ -76,7 +75,7 @@ public class Login extends Application {
         );
 
         // Logo section
-        Image logo = new Image("file:///C:/Users/Scarlet/Downloads/A - DT/MapApp/src/main/java/Photos/TheMap.png");
+        Image logo = new Image("file:/C:/Users/Scarlet/Downloads/A%20-%20DT/MapApp/src/main/java/Photos/TheMap.png");
         ImageView logoView = new ImageView(logo);
         logoView.setFitWidth(150);
         logoView.setFitHeight(150);
@@ -123,6 +122,7 @@ public class Login extends Application {
                         "-fx-font-size: 16px;" +
                         "-fx-effect: dropshadow(gaussian, rgba(140,82,242,0.3), 10, 0, 0, 4);"
         );
+        loginButton.setOnAction(e -> System.out.println("Login button clicked"));
 
         // Agrega los elementos al contenedor principal
         container.getChildren().addAll(
@@ -147,7 +147,7 @@ public class Login extends Application {
         );
 
         // Logo section
-        Image logo = new Image("file:///C:/Users/Scarlet/Downloads/A - DT/MapApp/src/main/java/Photos/TheMap.png");
+        Image logo = new Image("file:/C:/Users/Scarlet/Downloads/A%20-%20DT/MapApp/src/main/java/Photos/TheMap.png");
         ImageView logoView = new ImageView(logo);
         logoView.setFitWidth(150);
         logoView.setFitHeight(150);
@@ -201,10 +201,20 @@ public class Login extends Application {
 
             // Envía el correo de confirmación
             String subject = "¡Bienvenido a NodeMap!";
-            Welcome.sendEmail(email, subject, username, password);
+            //Welcome.sendEmail(email, subject, username, password);
 
             System.out.println("Correo enviado correctamente!");
-            showLoginForm(screenBounds);
+            //showLoginForm(screenBounds);
+            Stage dashboardStage = new Stage();
+            MainDashboard.showDashboard(dashboardStage);
+
+            // Close the current window
+            if (signUpContainer.getScene() != null) {
+                ((Stage) signUpContainer.getScene().getWindow()).close();
+            } else {
+                System.out.println("No se pudo cerrar la ventana: signUpContainer no está en la escena actual.");
+            }
+
         });
 
         // Agrega los elementos al contenedor de registro

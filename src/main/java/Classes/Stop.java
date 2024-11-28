@@ -1,9 +1,10 @@
 package Classes;
 
+import javafx.geometry.Point2D;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import Controller.WorldMap;
 
 public class Stop {
     private static int counter = 0;
@@ -11,27 +12,47 @@ public class Stop {
     private final List<Stop> adjacencyList;
     private HashMap<Stop, Integer[]> routeAttributes = new HashMap<>();
 
-    public Stop(List<Stop> vertices, int[] distance, int[] time, int[] price, int[] transports) {
+    // New field for location using Point2D
+    private final Point2D location;
+
+    public Stop(List<Stop> vertices, int[] distance, int[] time, int[] price, int[] transports, double x, double y) {
         this.id = ++counter;
+        this.location = new Point2D(x, y); // Set the location using Point2D
 
         adjacencyList = new ArrayList<>();
-        for(int ind = 0; ind < distance.length; ind++) {
+        for (int ind = 0; ind < distance.length; ind++) {
             adjacencyList.add(vertices.get(ind));
             routeAttributes.put(vertices.get(ind), new Integer[]{distance[ind], time[ind], price[ind], transports[ind]});
-
-            WorldMap.getInstance().findStopById(vertices.get(ind).id).addVertex(this, distance[ind], time[ind], price[ind], transports[ind]);
-            WorldMap.getInstance().findStopById(vertices.get(ind).id).getRouteAttributes().put(this, new Integer[]{distance[ind], time[ind], price[ind], transports[ind]});
         }
     }
 
-    public Stop() {
+    public Stop(double x, double y) {
         this.id = ++counter;
+        this.location = new Point2D(x, y); // Set the location using Point2D
         this.adjacencyList = new ArrayList<>();
         this.routeAttributes = new HashMap<>();
     }
 
-    public HashMap<Stop, Integer[]> getRouteAttributes() {
-        return routeAttributes;
+    public Stop() {
+        this.id = ++counter;
+        this.location = new Point2D(0, 0); // Set the location using Point2D
+        this.adjacencyList = new ArrayList<>();
+        this.routeAttributes = new HashMap<>();
+    }
+
+    // Getter for location
+    public Point2D getLocation() {
+        return location;
+    }
+
+    // Getter for X coordinate
+    public double getX() {
+        return location.getX();
+    }
+
+    // Getter for Y coordinate
+    public double getY() {
+        return location.getY();
     }
 
     public int getId() {
@@ -45,11 +66,13 @@ public class Stop {
     public void addVertex(Stop vertex, int distance, int time, int price, int transports) {
         if (!adjacencyList.contains(vertex)) {
             adjacencyList.add(vertex);
+            vertex.getAdjacencyList().add(this);
+            vertex.getRouteAttributes().put(this, new Integer[]{distance, time, price, transports});
             routeAttributes.put(vertex, new Integer[]{distance, time, price, transports});
         }
     }
 
-        public void removeVertex(Stop vertex) {
+    public void removeVertex(Stop vertex) {
         adjacencyList.remove(vertex);
         routeAttributes.remove(vertex);
     }
@@ -79,5 +102,9 @@ public class Stop {
                     routeAttributes.get(stop)[3]));
         }
         return routes;
+    }
+
+    public HashMap<Stop, Integer[]> getRouteAttributes() {
+        return routeAttributes;
     }
 }

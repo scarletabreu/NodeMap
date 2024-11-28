@@ -1,5 +1,5 @@
 package Visual.Classes;
-
+/*
 import Mail.EmailService;
 
 import java.util.Random;
@@ -36,4 +36,4 @@ public class PasswordReset {
     public void sendResetEmail() {
         emailService.sendResetEmail(username, resetCode); // Envía el correo con el código de recuperación
     }
-}
+}*/
